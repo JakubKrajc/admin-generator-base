@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Admin :: {{title}}</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/public/bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/public/bower_components/Ionicons/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/public/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/public/dist/css/skins/_all-skins.min.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+  <script>
+        function adminAlert(message, type){
+            var src = '';
+            src += '<div class="alert alert-'+type+'" role="alert">';
+            src += '    <button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+            src += '        <span aria-hidden="true">&times;</span>';
+            src += '    </button>';
+            src += message;
+            src += '</div>';
+            $("#alert-area").append(src);
+        }
+        
+        function adminConfirm(message, type, cbtxt){
+            var src = '';
+            src += '<div class="alert alert-'+type+'" role="alert">';
+            src += '    <button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+            src += '        <span aria-hidden="true">&times;</span>';
+            src += '    </button>';
+            src += '    <p>'+message+'</p>';
+            src += '    <p><button type="button" data-dismiss="alert" class="btn btn-'+type+'" onclick="'+cbtxt+'">Ok</button>';
+            src += '    <button type="button" data-dismiss="alert" class="btn btn-default">Cancel</button></p>';
+            src += '</div>';
+            $("#alert-area").html(src);
+        }
+
+        var runner = {
+
+        }
+        runner.active = false;
+        runner.cbs = [];
+
+        runner.add = function(cb){
+          if(!runner.active){
+            runner.cbs.push(cb);
+          }else{
+            cb();
+          }          
+        }
+
+        runner.run = function(){
+          runner.active = true;
+          while(runner.cbs.length > 0){
+            cb = runner.cbs.shift();
+            setTimeout(function(){
+              cb();
+            }, 0);
+          }
+        }
+
+        window.onload = function(){
+          runner.run();
+        }
+        
+    </script>
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="/"><b>Admin</b>LTE</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">Sign in to start your session</p>
+
+    <div id="alert-area">
+      {% for flashMessage in FlashMessages %}
+        {% if flashMessage.type == "err" %}
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                {{flashMessage.message}}
+            </div>
+        {% elseif flashMessage.type == "scs"  %}
+            <div class="alert alert-success" role="alert">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                <span class="sr-only">Success:</span>
+                {{flashMessage.message}}
+            </div>
+        {% else %}
+            <div class="alert alert-default" role="alert">
+
+                {{flashMessage.message}}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+                
+    </div>
+
+    {% block content %}{% endblock %}   
+
+
+  </div>
+  <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery 3 -->
+<script src="/public/bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="/public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/public/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/public/bower_components/fastclick/lib/fastclick.js"></script>
+</body>
+</html>
